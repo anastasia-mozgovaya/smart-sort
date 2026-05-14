@@ -75,7 +75,7 @@ namespace eco.ViewModels
 
         private void CameraLoop(CancellationToken token)
         {
-            using (var capture = new VideoCapture(1, VideoCaptureAPIs.DSHOW))
+            using (var capture = new VideoCapture(0, VideoCaptureAPIs.DSHOW))
             {
                 if (!capture.IsOpened()) return;
 
@@ -141,7 +141,7 @@ namespace eco.ViewModels
 
                                 if (distance < 50)
                                 {
-                                    if ((DateTime.Now - _stableStartTime).TotalMilliseconds >= 1500)
+                                    if ((DateTime.Now - _stableStartTime).TotalMilliseconds >= 3000)
                                     {
                                         _isTracking = false;
                                         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -228,23 +228,21 @@ namespace eco.ViewModels
                     ResRecommendation = result.Recommendation;
                     ResComment = result.Comment;
 
-
                     string binLower = result.Bin.ToLower();
 
                     if (binLower.Contains("рано") ||
                         binLower.Contains("не утилизируется") ||
-                        binLower.Contains("подготовк"))
+                        binLower.Contains("подготовк")) 
                     {
                         Response = "Внимание! Объект требует подготовки.";
                         IsWarningActive = true;
-                        IsBusy = false; 
+                        IsBusy = false;
 
                         await Task.Delay(10000); 
 
                         IsWarningActive = false;
                         return; 
                     }
-
 
                     string targetColor = "";
                     string fileName = "";
@@ -268,7 +266,7 @@ namespace eco.ViewModels
                         Response = $"Ожидание: выбросьте объект в {targetColor} бак";
 
                         IsWaitingForArduino = true;
-                        IsBusy = false;
+                        IsBusy = false; 
 
                         await Task.Delay(500);
                         string arduinoResponse = await _arduinoService.WaitForWasteAsync();
@@ -316,12 +314,10 @@ namespace eco.ViewModels
             }
             finally
             {
-
                 IsBusy = false;
                 IsWaitingForArduino = false;
                 IsWarningActive = false;
                 _isOllamaActive = false;
-
 
                 ResObject = "";
                 ResMaterial = "";
