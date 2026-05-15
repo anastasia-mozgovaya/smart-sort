@@ -1,0 +1,109 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lottie="clr-namespace:Avalonia.Labs.Lottie;assembly=Avalonia.Labs.Lottie"
+        xmlns:vm="using:eco.ViewModels"
+        x:Class="eco.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Background="#2D3A20"
+        WindowState="Maximized">
+
+    <Grid ColumnDefinitions="1.2*, 0.8*">
+        
+        <Border Grid.Column="0" Margin="30" CornerRadius="30" ClipToBounds="True" Background="#1A2214" BoxShadow="0 15 35 5 #60000000">
+            <Panel>
+                <Grid IsVisible="{Binding !IsBusy}">
+                    <Image Source="{Binding Camera}" Stretch="UniformToFill"/>
+                    <Border BorderBrush="#73a942" BorderThickness="2" CornerRadius="30" Opacity="0.3"/>
+                </Grid>
+
+                <Grid IsVisible="{Binding IsBusy}" Background="#F8F9FA">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <lottie:Lottie Path="/Assets/ecology.json" 
+                                       Width="120" Height="120" 
+                                       RepeatCount="-1"/>
+                        <TextBlock Text="Изучаю мусор..." 
+                                   Foreground="#546B41" 
+                                   FontSize="14" 
+                                   FontWeight="Medium"
+                                   HorizontalAlignment="Center" 
+                                   Margin="0,15,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Panel>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto, *, Auto" Margin="0,30,30,30">
+            
+            <Border Grid.Row="0" Background="#73a942" CornerRadius="15" Padding="15" BoxShadow="0 4 10 0 #40000000">
+                <TextBlock Text="{Binding Response}" HorizontalAlignment="Center" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" Margin="0,20">
+                <Border Background="#FDFDFD" CornerRadius="25" Padding="25" BoxShadow="0 10 30 0 #50000000">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="РЕЗУЛЬТАТ" FontSize="12" FontWeight="Bold" Foreground="#A0A0A0" LetterSpacing="2"/>
+                        
+                        <StackPanel>
+                            <TextBlock Text="ОБЪЕКТ" FontSize="10" Foreground="#73a942" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding ResObject}" FontSize="26" FontWeight="Heavy" Foreground="#2D3A20" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <Border Background="#F1F3F0" CornerRadius="12" Padding="12">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Материал:" Foreground="#546B41" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding ResMaterial}" Foreground="#2D3A20"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Separator Height="1" Background="#EEEEEE"/>
+
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="КУДА ОТПРАВИТЬ?" FontSize="10" Foreground="#73a942" FontWeight="Bold"/>
+                            <Border Background="#E8F5E9" CornerRadius="15" Padding="15">
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Image Grid.Column="0" 
+                                           Source="{Binding BinImage}" 
+                                           Width="80" Height="80" 
+                                           Margin="0,0,15,0"
+                                           Stretch="Uniform"/>
+                                    <TextBlock Grid.Column="1" 
+                                               Text="{Binding ResBin}" 
+                                               FontSize="24" 
+                                               FontWeight="Black" 
+                                               Foreground="#1B5E20" 
+                                               VerticalAlignment="Center" 
+                                               TextWrapping="Wrap"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="8" IsVisible="{Binding ResRecommendation, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock Text="ИНСТРУКЦИЯ" FontSize="10" Foreground="#73a942" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ResRecommendation}" Foreground="#444444" TextWrapping="Wrap" FontSize="14" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="8" IsVisible="{Binding ResComment, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock Text="ПОЧЕМУ ТАК?" FontSize="10" Foreground="#D32F2F" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ResComment}" Foreground="#444444" TextWrapping="Wrap" FontSize="14"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </ScrollViewer>
+
+            <Button Grid.Row="2" 
+                    Command="{Binding PhotographCommand}" 
+                    Height="75"
+                    Background="#73a942" 
+                    Foreground="White" 
+                    CornerRadius="20"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                    <Path Data="M12,4A2,2 0 0,0 10,6H7A2,2 0 0,0 5,8V18A2,2 0 0,0 7,20H17A2,2 0 0,0 19,18V8A2,2 0 0,0 17,6H14A2,2 0 0,0 12,4M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" 
+                          Fill="White" Width="28" Height="28" Stretch="Uniform"/>
+                    <TextBlock Text="СКАНИРОВАТЬ" FontSize="20" FontWeight="Black" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
